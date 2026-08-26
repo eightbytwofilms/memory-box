@@ -1,0 +1,25 @@
+# The films themselves, and anything derived from them.
+# On the Mac ui/media is a symlink to the footage; on the Pi it's a real folder.
+ui/media
+ui/art/
+art-src/
+
+# Your own library — copy ui/library.sample.json to ui/library.json and edit.
+ui/library.json
+
+# Scratch pages
+ui/_*.html
+knob-wiring-check.html
+knob-wiring-final.html
+pin39.html
+
+__pycache__/
+*.pyc
+.DS_Store
+
+# Private working documents — magazine answers, correspondence drafts
+*-showcase-answers.md
+*-email-draft.md
+
+# Your own film table
+art-items.conf

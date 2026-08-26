@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Memory Box — The Knob, Explained Simply</title>
+<style>
+  :root { --ink:#1c1c1c; --mute:#6b6b6b; --line:#d8d2c8; --paper:#faf8f4; --accent:#b8541f; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink);
+         font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif; }
+  .wrap { max-width:980px; margin:0 auto; padding:48px 28px 90px; }
+  h1 { font-size:40px; line-height:1.15; margin:0 0 6px; letter-spacing:-.5px; }
+  .sub { color:var(--mute); font-size:19px; margin:0 0 44px; }
+  h2 { font-size:27px; margin:56px 0 6px; letter-spacing:-.3px; }
+  h2 .n { display:inline-block; width:38px; height:38px; line-height:38px; text-align:center;
+          background:var(--accent); color:#fff; border-radius:50%; font-size:20px;
+          margin-right:12px; vertical-align:3px; }
+  h3 { font-size:19px; margin:30px 0 4px; }
+  p { margin:10px 0; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px;
+          padding:22px; margin:22px 0; }
+  svg { display:block; width:100%; height:auto; }
+  .cap { color:var(--mute); font-size:15px; margin-top:12px; text-align:center; }
+  .big { font-size:20px; background:#fff6e8; border-left:5px solid var(--accent);
+         padding:16px 20px; border-radius:0 10px 10px 0; margin:24px 0; }
+  ul { margin:10px 0; padding-left:22px; }
+  li { margin:7px 0; }
+  table { border-collapse:collapse; width:100%; margin:16px 0; font-size:16px; }
+  th,td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); }
+  th { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--mute); }
+  .sw { display:inline-block; width:14px; height:14px; border-radius:3px; margin-right:8px;
+        vertical-align:-2px; }
+  code { background:#efece6; padding:2px 6px; border-radius:5px; font-size:15px; }
+  .hr { height:1px; background:var(--line); margin:60px 0 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>The Knob, Explained Simply</h1>
+<p class="sub">Memory Box · Magnavox radio · what goes where, and why</p>
+
+<div class="big">
+<strong>The whole idea in one sentence:</strong> the old radio knob used to turn a
+metal rod that was bolted to the radio's guts. You threw the guts away. So now you
+build a tiny shelf inside the cabinet, bolt a new electronic knob to that shelf,
+and poke its rod out through the same hole the old one used.
+</div>
+
+<h2><span class="n">1</span>What we're building, from the side</h2>
+<p>Imagine slicing the radio in half like a sandwich and looking at the cut edge.
+Your face is on the <strong>left</strong>. The inside of the cabinet is on the
+<strong>right</strong>.</p>
+
+<div class="card">
+<svg viewBox="0 0 940 440" role="img" aria-label="Side view cross section of the knob mounting">
+  <defs>
+    <pattern id="wood" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#c08a4a"/>
+      <path d="M0 2h8M0 6h8" stroke="#a9743a" stroke-width="1.2"/>
+    </pattern>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 z" fill="#6b6b6b"/>
+    </marker>
+  </defs>
+
+  <!-- outside / inside labels -->
+  <text x="60" y="34" font-size="15" fill="#6b6b6b" font-weight="600">OUTSIDE (you see this)</text>
+  <text x="620" y="34" font-size="15" fill="#6b6b6b" font-weight="600">INSIDE THE CABINET</text>
+  <line x1="300" y1="44" x2="300" y2="410" stroke="#e2ddd4" stroke-width="2" stroke-dasharray="5 5"/>
+
+  <!-- KNOB -->
+  <rect x="120" y="150" width="80" height="150" rx="12" fill="#3a3330"/>
+  <rect x="120" y="150" width="26" height="150" rx="12" fill="#4a423e"/>
+  <text x="160" y="330" font-size="15" text-anchor="middle" font-weight="700">the old knob</text>
+
+  <!-- air gap -->
+  <line x1="200" y1="325" x2="228" y2="325" stroke="#6b6b6b" stroke-width="1.5"/>
+  <text x="214" y="348" font-size="13" text-anchor="middle" fill="#6b6b6b">2mm</text>
+  <text x="214" y="364" font-size="13" text-anchor="middle" fill="#6b6b6b">gap</text>
+
+  <!-- FRONT PANEL (two pieces = the hole) -->
+  <rect x="228" y="60" width="18" height="150" fill="#8d8378"/>
+  <rect x="228" y="250" width="18" height="150" fill="#8d8378"/>
+  <text x="237" y="52" font-size="14" text-anchor="middle" font-weight="700">radio face</text>
+  <text x="237" y="232" font-size="12" text-anchor="middle" fill="#b8541f" font-weight="700">hole</text>
+
+  <!-- SHAFT -->
+  <rect x="150" y="215" width="270" height="18" rx="4" fill="#b9b3a8"/>
+  <rect x="150" y="215" width="270" height="7" rx="3" fill="#d3cdc2"/>
+
+  <!-- NUT + WASHER on front of bracket -->
+  <rect x="392" y="192" width="14" height="64" rx="3" fill="#7d7369"/>
+
+  <!-- BRACKET -->
+  <rect x="406" y="115" width="20" height="220" rx="4" fill="#2f6f8f"/>
+
+  <!-- WASHER SHIMS -->
+  <rect x="426" y="140" width="16" height="22" rx="2" fill="#e0dbd1" stroke="#b5aea2"/>
+  <rect x="426" y="288" width="16" height="22" rx="2" fill="#e0dbd1" stroke="#b5aea2"/>
+
+  <!-- ENCODER body + PCB -->
+  <rect x="426" y="188" width="62" height="74" rx="4" fill="#4a4a4a"/>
+  <rect x="488" y="168" width="16" height="114" rx="3" fill="#1f5f3f"/>
+  <circle cx="496" cy="196" r="4" fill="#c9a227"/><circle cx="496" cy="214" r="4" fill="#c9a227"/>
+  <circle cx="496" cy="232" r="4" fill="#c9a227"/><circle cx="496" cy="250" r="4" fill="#c9a227"/>
+  <circle cx="496" cy="268" r="4" fill="#c9a227"/>
+
+  <!-- CROSSBAR (wood strip) top and bottom -->
+  <rect x="442" y="120" width="70" height="60" rx="4" fill="url(#wood)" stroke="#8d5f2c"/>
+  <rect x="442" y="270" width="70" height="60" rx="4" fill="url(#wood)" stroke="#8d5f2c"/>
+  <!-- screws -->
+  <line x1="410" y1="151" x2="500" y2="151" stroke="#5a5a5a" stroke-width="5"/>
+  <line x1="410" y1="299" x2="500" y2="299" stroke="#5a5a5a" stroke-width="5"/>
+
+  <!-- LABELS right -->
+  <line x1="560" y1="150" x2="516" y2="150" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+  <text x="568" y="146" font-size="15" font-weight="700">wood strip ("the shelf")</text>
+  <text x="568" y="167" font-size="14" fill="#6b6b6b">glued/screwed to the cabinet sides</text>
+
+  <line x1="560" y1="225" x2="508" y2="225" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+  <text x="568" y="221" font-size="15" font-weight="700">the encoder (new electronic knob)</text>
+  <text x="568" y="242" font-size="14" fill="#6b6b6b">5 wires come off these gold pins</text>
+
+  <line x1="560" y1="330" x2="424" y2="330" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+  <text x="568" y="326" font-size="15" font-weight="700">plastic bracket</text>
+  <text x="568" y="347" font-size="14" fill="#6b6b6b">50mm square of 1/8" PVC, 7mm hole</text>
+
+  <line x1="399" y1="410" x2="399" y2="264" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+  <text x="399" y="428" font-size="14" text-anchor="middle" fill="#6b6b6b">nut screws on here</text>
+
+  <line x1="434" y1="98" x2="434" y2="134" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+  <text x="434" y="90" font-size="13" text-anchor="middle" fill="#6b6b6b">washers = move it forward/back</text>
+</svg>
+<p class="cap">Left to right: knob → tiny air gap → radio face → nut → bracket → encoder → wood shelf.</p>
+</div>
+
+<h3>Why each piece exists</h3>
+<ul>
+  <li><strong>Wood strip.</strong> The encoder needs something solid to hold onto.
+      The radio face alone is too thin and will eventually wobble loose. So you glue
+      a stick of wood across the inside of the cabinet — like a towel bar — and
+      everything hangs off that.</li>
+  <li><strong>Plastic bracket.</strong> You can't screw an encoder to a wood strip
+      directly. So the encoder gets bolted to a flat plastic square first, and the
+      plastic square gets screwed to the wood.</li>
+  <li><strong>Washers.</strong> Stacking washers behind the bracket slides it
+      forward or backward a millimeter at a time — that's how you get the knob to
+      stick out exactly as far as it used to.</li>
+  <li><strong>2mm air gap.</strong> If the knob touches the face, it scrapes and the
+      push-button can't push. Leave it a hair of daylight.</li>
+</ul>
+
+<h2><span class="n">2</span>The wires — only five of them</h2>
+<p>Five wires go from the little encoder board to the Pi's row of pins. That's it.
+No soldering required to test it, no resistors, no circuit board.</p>
+
+<div class="card">
+<svg viewBox="0 0 940 400" role="img" aria-label="Wiring from KY-040 to Raspberry Pi pins">
+  <!-- module -->
+  <rect x="40" y="70" width="210" height="260" rx="10" fill="#1f5f3f"/>
+  <text x="145" y="102" font-size="15" fill="#cfe8d8" text-anchor="middle" font-weight="700">KY-040 encoder</text>
+  <circle cx="112" cy="196" r="42" fill="#2b2b2b"/>
+  <circle cx="112" cy="196" r="16" fill="#454545"/>
+  <text x="112" y="262" font-size="13" fill="#cfe8d8" text-anchor="middle">(knob goes here)</text>
+
+  <!-- pads -->
+  <g font-size="14" fill="#fff" font-weight="700" text-anchor="end">
+    <circle cx="238" cy="130" r="7" fill="#3a7bd5"/><text x="226" y="135">CLK</text>
+    <circle cx="238" cy="170" r="7" fill="#2e9e5b"/><text x="226" y="175">DT</text>
+    <circle cx="238" cy="210" r="7" fill="#e08a2e"/><text x="226" y="215">SW</text>
+    <circle cx="238" cy="250" r="7" fill="#cf3b3b"/><text x="226" y="255">+</text>
+    <circle cx="238" cy="290" r="7" fill="#9a9a9a"/><text x="226" y="295">GND</text>
+  </g>
+
+  <!-- wires -->
+  <g fill="none" stroke-width="4.5" stroke-linecap="round">
+    <path d="M238 130 C 340 130, 400 62, 520 62"  stroke="#3a7bd5"/>
+    <path d="M238 170 C 340 170, 400 128, 520 128" stroke="#2e9e5b"/>
+    <path d="M238 210 C 340 210, 400 194, 520 194" stroke="#e08a2e"/>
+    <path d="M238 250 C 340 250, 400 260, 520 260" stroke="#cf3b3b"/>
+    <path d="M238 290 C 340 290, 400 326, 520 326" stroke="#9a9a9a"/>
+  </g>
+
+  <!-- destination boxes -->
+  <g>
+    <rect x="520" y="38" width="382" height="48" rx="9" fill="#fff" stroke="#3a7bd5" stroke-width="2"/>
+    <text x="540" y="60" font-size="17" font-weight="700">Pi pin 11</text>
+    <text x="540" y="78" font-size="14" fill="#6b6b6b">GPIO17 — counts which way you turn</text>
+
+    <rect x="520" y="104" width="382" height="48" rx="9" fill="#fff" stroke="#2e9e5b" stroke-width="2"/>
+    <text x="540" y="126" font-size="17" font-weight="700">Pi pin 12</text>
+    <text x="540" y="144" font-size="14" fill="#6b6b6b">GPIO18 — the other half of "which way"</text>
+
+    <rect x="520" y="170" width="382" height="48" rx="9" fill="#fff" stroke="#e08a2e" stroke-width="2"/>
+    <text x="540" y="192" font-size="17" font-weight="700">Pi pin 13</text>
+    <text x="540" y="210" font-size="14" fill="#6b6b6b">GPIO27 — the push-down button</text>
+
+    <rect x="520" y="236" width="382" height="48" rx="9" fill="#fff" stroke="#cf3b3b" stroke-width="2"/>
+    <text x="540" y="258" font-size="17" font-weight="700">Pi pin 1</text>
+    <text x="540" y="276" font-size="14" fill="#6b6b6b">3.3 volts — power. NOT pin 2 or 4 (those are 5V)</text>
+
+    <rect x="520" y="302" width="382" height="48" rx="9" fill="#fff" stroke="#9a9a9a" stroke-width="2"/>
+    <text x="540" y="324" font-size="17" font-weight="700">Pi pin 6</text>
+    <text x="540" y="342" font-size="14" fill="#6b6b6b">ground — the return path</text>
+  </g>
+</svg>
+</div>
+
+<h3>How to count to pin 11 without losing your mind</h3>
+<p>The Pi's pins are two rows of 20. Hold the Pi with the pins along the top edge.
+<strong>Pin 1 is the one closest to the corner, on the row nearer the edge of the
+board</strong> — it usually has a little square solder pad instead of a round one.
+Odd numbers go down that row, even numbers down the other.</p>
+
+<div class="card">
+<svg viewBox="0 0 940 260" role="img" aria-label="Pi header pin numbering">
+  <rect x="150" y="40" width="640" height="170" rx="10" fill="#efece6" stroke="#d8d2c8"/>
+  <text x="470" y="30" font-size="14" fill="#6b6b6b" text-anchor="middle">corner of the Pi ↓ (only the first 14 pins shown)</text>
+
+  <!-- odd row -->
+  <g>
+    <g font-size="13" text-anchor="middle">
+      <rect x="176" y="70" width="36" height="36" rx="4" fill="#cf3b3b"/><text x="194" y="94" fill="#fff" font-weight="700">1</text>
+      <circle cx="248" cy="88" r="16" fill="#c9c3b8"/><text x="248" y="93">3</text>
+      <circle cx="302" cy="88" r="16" fill="#c9c3b8"/><text x="302" y="93">5</text>
+      <circle cx="356" cy="88" r="16" fill="#c9c3b8"/><text x="356" y="93">7</text>
+      <circle cx="410" cy="88" r="16" fill="#c9c3b8"/><text x="410" y="93">9</text>
+      <circle cx="464" cy="88" r="18" fill="#3a7bd5"/><text x="464" y="93" fill="#fff" font-weight="700">11</text>
+      <circle cx="518" cy="88" r="18" fill="#e08a2e"/><text x="518" y="93" fill="#fff" font-weight="700">13</text>
+      <circle cx="572" cy="88" r="16" fill="#c9c3b8"/><text x="572" y="93">15</text>
+      <circle cx="626" cy="88" r="16" fill="#c9c3b8"/><text x="626" y="93">17</text>
+      <circle cx="680" cy="88" r="16" fill="#c9c3b8"/><text x="680" y="93">19</text>
+      <circle cx="734" cy="88" r="16" fill="#c9c3b8"/><text x="734" y="93">21</text>
+    </g>
+  </g>
+  <!-- even row -->
+  <g font-size="13" text-anchor="middle">
+    <circle cx="194" cy="162" r="16" fill="#c9c3b8"/><text x="194" y="167">2</text>
+    <circle cx="248" cy="162" r="16" fill="#c9c3b8"/><text x="248" y="167">4</text>
+    <circle cx="302" cy="162" r="18" fill="#9a9a9a"/><text x="302" y="167" fill="#fff" font-weight="700">6</text>
+    <circle cx="356" cy="162" r="16" fill="#c9c3b8"/><text x="356" y="167">8</text>
+    <circle cx="410" cy="162" r="16" fill="#c9c3b8"/><text x="410" y="167">10</text>
+    <circle cx="464" cy="162" r="18" fill="#2e9e5b"/><text x="464" y="167" fill="#fff" font-weight="700">12</text>
+    <circle cx="518" cy="162" r="16" fill="#c9c3b8"/><text x="518" y="167">14</text>
+    <circle cx="572" cy="162" r="16" fill="#c9c3b8"/><text x="572" y="167">16</text>
+    <circle cx="626" cy="162" r="16" fill="#c9c3b8"/><text x="626" y="167">18</text>
+    <circle cx="680" cy="162" r="16" fill="#c9c3b8"/><text x="680" y="167">20</text>
+    <circle cx="734" cy="162" r="16" fill="#c9c3b8"/><text x="734" y="167">22</text>
+  </g>
+
+  <text x="194" y="132" font-size="12" text-anchor="middle" fill="#cf3b3b" font-weight="700">square pad = pin 1</text>
+</svg>
+<p class="cap">Colored pins are the five you use. Everything else stays empty.</p>
+</div>
+
+<table>
+  <tr><th>Wire from encoder</th><th>Goes to</th><th>Plain English</th></tr>
+  <tr><td><span class="sw" style="background:#cf3b3b"></span><code>+</code></td><td>Pin 1</td><td>Power in</td></tr>
+  <tr><td><span class="sw" style="background:#9a9a9a"></span><code>GND</code></td><td>Pin 6</td><td>Power out</td></tr>
+  <tr><td><span class="sw" style="background:#3a7bd5"></span><code>CLK</code></td><td>Pin 11</td><td>Turn sensor A</td></tr>
+  <tr><td><span class="sw" style="background:#2e9e5b"></span><code>DT</code></td><td>Pin 12</td><td>Turn sensor B</td></tr>
+  <tr><td><span class="sw" style="background:#e08a2e"></span><code>SW</code></td><td>Pin 13</td><td>Push button</td></tr>
+</table>
+
+<div class="big">
+<strong>The one mistake that kills the Pi:</strong> putting the red wire on pin 2 or
+pin 4. Those are 5 volts and they will fry the input pins. Pin 1 only. It's the very
+first pin in the corner.
+</div>
+
+<h2><span class="n">3</span>Making the old knob fit the new shaft</h2>
+<p>The new encoder's shaft is 6mm. The hole in your vintage knob is almost certainly
+some other size or shape. Rather than hunting for an adapter, you mold one.</p>
+
+<div class="card">
+<svg viewBox="0 0 940 230" role="img" aria-label="Epoxy putty knob bore trick">
+  <g text-anchor="middle">
+    <!-- step 1 -->
+    <text x="150" y="26" font-size="15" font-weight="700">1. Tape the shaft</text>
+    <rect x="120" y="60" width="60" height="110" rx="6" fill="#b9b3a8"/>
+    <rect x="116" y="60" width="68" height="110" rx="6" fill="none" stroke="#e08a2e" stroke-width="4" stroke-dasharray="7 5"/>
+    <text x="150" y="196" font-size="13" fill="#6b6b6b">one layer of plumber's tape</text>
+    <text x="150" y="214" font-size="13" fill="#6b6b6b">so it won't stick</text>
+
+    <!-- step 2 -->
+    <text x="470" y="26" font-size="15" font-weight="700">2. Fill the knob, push it on</text>
+    <rect x="410" y="55" width="120" height="120" rx="14" fill="#3a3330"/>
+    <rect x="440" y="72" width="60" height="86" rx="6" fill="#d8d2c8"/>
+    <rect x="452" y="80" width="36" height="70" rx="4" fill="#b9b3a8"/>
+    <text x="470" y="196" font-size="13" fill="#6b6b6b">epoxy putty packed in the hole,</text>
+    <text x="470" y="214" font-size="13" fill="#6b6b6b">then press the knob onto the shaft</text>
+
+    <!-- step 3 -->
+    <text x="790" y="26" font-size="15" font-weight="700">3. Twist off after 10 min</text>
+    <rect x="730" y="55" width="120" height="120" rx="14" fill="#3a3330"/>
+    <rect x="760" y="72" width="60" height="86" rx="6" fill="#d8d2c8"/>
+    <text x="790" y="196" font-size="13" fill="#6b6b6b">now the knob has a perfect</text>
+    <text x="790" y="214" font-size="13" fill="#6b6b6b">6mm hole molded into it</text>
+  </g>
+</svg>
+</div>
+
+<p>No measuring, no adapter to order, works no matter how weird the original hole is.
+And because the encoder doesn't care which way it's pointing, you never have to line
+the knob up with anything — unlike the old tuner.</p>
+
+<h2><span class="n">4</span>The order to actually do it in</h2>
+<ol>
+  <li><strong>On the bench, nothing mounted.</strong> Plug the five wires into the Pi,
+      run the code, turn the encoder with your fingers. Make sure a game changes. Do
+      not mount anything until this works.</li>
+  <li><strong>Cut the plastic bracket</strong> and bolt the encoder to it. Now hold the
+      bracket up behind the radio face by hand and see how far the shaft pokes through.</li>
+  <li><strong>Cut and glue the wood strip</strong> inside the cabinet at the right depth
+      so the knob ends up sitting where it used to.</li>
+  <li><strong>Screw the bracket to the strip</strong>, adding washers until the knob
+      depth looks right and there's a 2mm gap.</li>
+  <li><strong>Mold the knob</strong> onto the shaft.</li>
+  <li><strong>Only now</strong> do the artwork and paint. Every hole is final at this point.</li>
+</ol>
+
+<div class="big">
+Step 1 is the important one. Get the electronics working on a table where you can
+see everything before anything is glued inside a cabinet. If something's wrong, you
+want to find out while it's still five loose wires.
+</div>
+
+<div class="hr"></div>
+<p class="cap" style="margin-top:24px">Eight×Two · Memory Box build #1</p>
+
+</div>
+</body>
+</html>

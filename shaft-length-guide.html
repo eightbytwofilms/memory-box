@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Memory Box — The Shaft (metal rod) explained</title>
+<style>
+  :root { --ink:#1c1c1c; --mute:#6b6b6b; --line:#d8d2c8; --paper:#faf8f4; --accent:#b8541f;
+          --good:#2e7d4f; --warn:#b03030; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink);
+         font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif; }
+  .wrap { max-width:980px; margin:0 auto; padding:48px 28px 90px; }
+  h1 { font-size:40px; line-height:1.15; margin:0 0 6px; letter-spacing:-.5px; }
+  .sub { color:var(--mute); font-size:19px; margin:0 0 40px; }
+  h2 { font-size:27px; margin:56px 0 6px; letter-spacing:-.3px; }
+  h2 .n { display:inline-block; width:38px; height:38px; line-height:38px; text-align:center;
+          background:var(--accent); color:#fff; border-radius:50%; font-size:20px;
+          margin-right:12px; vertical-align:3px; }
+  h3 { font-size:19px; margin:28px 0 4px; }
+  p { margin:10px 0; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px; margin:22px 0; }
+  svg { display:block; width:100%; height:auto; }
+  .cap { color:var(--mute); font-size:15px; margin-top:12px; text-align:center; }
+  .big { font-size:20px; background:#fff6e8; border-left:5px solid var(--accent);
+         padding:16px 20px; border-radius:0 10px 10px 0; margin:24px 0; }
+  .stop { font-size:19px; background:#fdeeee; border-left:5px solid var(--warn);
+          padding:16px 20px; border-radius:0 10px 10px 0; margin:24px 0; }
+  .yes { font-size:20px; background:#eef7f1; border-left:5px solid var(--good);
+         padding:16px 20px; border-radius:0 10px 10px 0; margin:24px 0; }
+  ul,ol { margin:10px 0; padding-left:22px; } li { margin:7px 0; }
+  table { border-collapse:collapse; width:100%; margin:16px 0; font-size:16px; }
+  th,td { text-align:left; padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--mute); }
+  code { background:#efece6; padding:2px 6px; border-radius:5px; font-size:15px; }
+  .hr { height:1px; background:var(--line); margin:60px 0 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>The Metal Rod</h1>
+<p class="sub">You don't buy one. It's already attached. · Memory Box build #1</p>
+
+<div class="yes">
+<strong>The encoder <em>is</em> the rod.</strong> A KY-040 arrives as one piece: a little
+green circuit board, a metal can, and a 6mm steel shaft sticking out of it. That shaft is
+the replacement for the old tuner rod. Nothing to buy, nothing to attach, nothing to
+align. You just have to check that it's <em>long enough</em> — that's the whole question.
+</div>
+
+<h2><span class="n">1</span>What actually shows up in the box</h2>
+
+<div class="card">
+<svg viewBox="0 0 940 330" role="img" aria-label="KY-040 encoder dimensions">
+  <defs>
+    <marker id="s1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#6b6b6b"/></marker>
+    <marker id="s2" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto">
+      <path d="M8 0 L0 4 L8 8 z" fill="#6b6b6b"/></marker>
+  </defs>
+
+  <!-- PCB -->
+  <rect x="640" y="60" width="26" height="210" rx="4" fill="#1f5f3f"/>
+  <circle cx="653" cy="98" r="5" fill="#c9a227"/><circle cx="653" cy="130" r="5" fill="#c9a227"/>
+  <circle cx="653" cy="162" r="5" fill="#c9a227"/><circle cx="653" cy="194" r="5" fill="#c9a227"/>
+  <circle cx="653" cy="226" r="5" fill="#c9a227"/>
+  <text x="700" y="167" font-size="15" font-weight="700">green board</text>
+  <text x="700" y="188" font-size="14" fill="#6b6b6b">5 pins for your wires</text>
+
+  <!-- body -->
+  <rect x="530" y="105" width="110" height="120" rx="4" fill="#585858"/>
+  <rect x="530" y="105" width="110" height="16" fill="#6d6d6d"/>
+  <text x="585" y="252" font-size="14" text-anchor="middle" fill="#6b6b6b">metal can</text>
+  <text x="585" y="270" font-size="13" text-anchor="middle" fill="#6b6b6b">12.5mm</text>
+
+  <!-- bushing (threaded) -->
+  <rect x="482" y="140" width="48" height="50" fill="#8e8e8e"/>
+  <g stroke="#6f6f6f" stroke-width="1.6">
+    <line x1="486" y1="140" x2="486" y2="190"/><line x1="494" y1="140" x2="494" y2="190"/>
+    <line x1="502" y1="140" x2="502" y2="190"/><line x1="510" y1="140" x2="510" y2="190"/>
+    <line x1="518" y1="140" x2="518" y2="190"/><line x1="526" y1="140" x2="526" y2="190"/>
+  </g>
+  <line x1="482" y1="212" x2="530" y2="212" stroke="#6b6b6b" stroke-width="1.3"
+        marker-start="url(#s2)" marker-end="url(#s1)"/>
+  <text x="506" y="232" font-size="13" text-anchor="middle" fill="#b03030" font-weight="700">5mm</text>
+  <text x="506" y="118" font-size="13" text-anchor="middle" fill="#6b6b6b">threads</text>
+
+  <!-- shaft -->
+  <rect x="230" y="150" width="252" height="30" rx="5" fill="#b9b3a8"/>
+  <rect x="230" y="150" width="252" height="11" rx="4" fill="#d3cdc2"/>
+  <!-- D flat -->
+  <rect x="230" y="150" width="90" height="30" rx="5" fill="#a8a297"/>
+  <text x="275" y="140" font-size="13" text-anchor="middle" fill="#6b6b6b">flat side (a "D" shape)</text>
+
+  <!-- dims -->
+  <line x1="230" y1="252" x2="482" y2="252" stroke="#6b6b6b" stroke-width="1.3"
+        marker-start="url(#s2)" marker-end="url(#s1)"/>
+  <text x="356" y="274" font-size="15" text-anchor="middle" fill="#6b6b6b">about 15mm of shaft past the threads</text>
+
+  <line x1="196" y1="150" x2="196" y2="180" stroke="#6b6b6b" stroke-width="1.3"
+        marker-start="url(#s2)" marker-end="url(#s1)"/>
+  <text x="176" y="170" font-size="15" text-anchor="end" fill="#6b6b6b">6mm thick</text>
+
+  <text x="356" y="60" font-size="17" text-anchor="middle" font-weight="700">← this is your "metal rod"</text>
+  <line x1="356" y1="72" x2="356" y2="142" stroke="#b8541f" stroke-width="2" marker-end="url(#s1)"/>
+</svg>
+<p class="cap">One part. The shaft, the threads, the switch and the sensor are all the same piece.</p>
+</div>
+
+<p><strong>Measure yours when it lands.</strong> Sellers vary — some KY-040s have a 20mm
+shaft, some 15mm, a few 13mm. The number that matters is <strong>how much shaft sticks
+out past the threaded collar</strong>. Put a ruler on it before you cut any PVC.</p>
+
+<h2><span class="n">2</span>The 15mm has to cover four things</h2>
+<p>Think of that 15mm as a budget. Four things spend it, and whatever's left over is how
+much shaft ends up buried in the knob.</p>
+
+<div class="card">
+<svg viewBox="0 0 940 250" role="img" aria-label="Shaft length budget bar">
+  <text x="20" y="30" font-size="15" fill="#6b6b6b" font-weight="600">YOUR 15mm OF SHAFT, SPENT LEFT TO RIGHT</text>
+
+  <rect x="40" y="55" width="860" height="70" rx="8" fill="#efece6" stroke="#d8d2c8"/>
+  <!-- segments -->
+  <rect x="40" y="55" width="180" height="70" rx="8" fill="#2f6f8f"/>
+  <rect x="220" y="55" width="170" height="70" fill="#8d8378"/>
+  <rect x="390" y="55" width="115" height="70" fill="#e0dbd1"/>
+  <rect x="505" y="55" width="395" height="70" rx="8" fill="#3a3330"/>
+
+  <text x="130" y="88" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">block</text>
+  <text x="130" y="108" font-size="13" fill="#cfe0ea" text-anchor="middle">~3mm</text>
+  <text x="305" y="88" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">radio face</text>
+  <text x="305" y="108" font-size="13" fill="#e8e4de" text-anchor="middle">~3mm</text>
+  <text x="447" y="88" font-size="14" text-anchor="middle" font-weight="700">gap</text>
+  <text x="447" y="108" font-size="13" fill="#6b6b6b" text-anchor="middle">2mm</text>
+  <text x="702" y="88" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">buried in the knob</text>
+  <text x="702" y="108" font-size="13" fill="#c9c3b8" text-anchor="middle">whatever's left — ~7mm</text>
+
+  <line x1="40" y1="150" x2="900" y2="150" stroke="#6b6b6b" stroke-width="1.3"/>
+  <line x1="40" y1="144" x2="40" y2="156" stroke="#6b6b6b" stroke-width="1.3"/>
+  <line x1="900" y1="144" x2="900" y2="156" stroke="#6b6b6b" stroke-width="1.3"/>
+  <text x="470" y="172" font-size="15" text-anchor="middle" fill="#6b6b6b">15mm total</text>
+
+  <text x="470" y="215" font-size="17" text-anchor="middle" font-weight="700">
+    5mm or more buried in the knob = plenty strong</text>
+  <text x="470" y="238" font-size="15" text-anchor="middle" fill="#6b6b6b">
+    epoxy grips the full circumference, so it doesn't need to go deep</text>
+</svg>
+</div>
+
+<p>With a ⅛" block and a typical thin radio face you land around 7mm in the knob. That's
+comfortable. And remember you're <em>molding</em> the knob's hole, so you don't have to
+make the knob's original depth work — you mold it exactly as deep as the leftover shaft.</p>
+
+<h2><span class="n">3</span>A correction to what I told you before</h2>
+
+<div class="stop">
+<strong>I said "¼" PVC or thicker, cut all three pieces from it." That's wrong for the
+strip.</strong> The threaded collar on the encoder is only <strong>5mm long</strong>. A ¼"
+strip is 6.35mm thick — the threads wouldn't even poke through, so the nut would have
+nothing to grab. My mistake, and it would have bitten you at assembly.
+</div>
+
+<p><strong>The strip needs to be about ⅛" (3mm).</strong> The blocks can be any thickness
+you like — they're just spacers. So:</p>
+
+<ul>
+  <li><strong>If your PVC board is ⅛":</strong> perfect as-is. Strip from it, and stack
+      two or three layers for each block.</li>
+  <li><strong>If your board is ¼" or thicker:</strong> still usable — just
+      <strong>counterbore</strong> it. Drill a shallow ⅜"–½" wide dish about 3mm deep on
+      the <em>front</em> face where the encoder hole goes, then drill the 9/32" hole
+      through the middle of that dish. Now there's only ~3mm of material at the hole and
+      the nut catches fine.</li>
+</ul>
+
+<div class="card">
+<svg viewBox="0 0 940 220" role="img" aria-label="Counterbore fix for thick PVC">
+  <text x="235" y="30" font-size="17" text-anchor="middle" font-weight="700">Thick strip: nut can't reach</text>
+  <rect x="185" y="55" width="46" height="130" fill="#2f6f8f"/>
+  <rect x="139" y="100" width="46" height="40" fill="#8e8e8e"/>
+  <rect x="105" y="105" width="34" height="30" rx="4" fill="#b9b3a8"/>
+  <text x="208" y="205" font-size="14" text-anchor="middle" fill="#b03030" font-weight="700">threads stop inside the board ✗</text>
+
+  <text x="705" y="30" font-size="17" text-anchor="middle" font-weight="700">Counterbored: nut grabs</text>
+  <rect x="655" y="55" width="46" height="130" fill="#2f6f8f"/>
+  <rect x="655" y="95" width="24" height="50" fill="#faf8f4"/>
+  <rect x="609" y="100" width="70" height="40" fill="#8e8e8e"/>
+  <rect x="575" y="105" width="34" height="30" rx="4" fill="#b9b3a8"/>
+  <rect x="595" y="92" width="14" height="56" rx="3" fill="#7d7369"/>
+  <text x="678" y="205" font-size="14" text-anchor="middle" fill="#2e7d4f" font-weight="700">shallow dish = threads poke out ✓</text>
+</svg>
+</div>
+
+<h2><span class="n">4</span>If the shaft turns out too short</h2>
+<p>Unlikely, but if you measure and the numbers don't work, in order of preference:</p>
+<ol>
+  <li><strong>Drop the blocks.</strong> Screw the strip straight to the back of the radio
+      face. Your old tuning hole is almost certainly wider than 7mm, so the threaded collar
+      just noses into it. Buys you back 3mm instantly.</li>
+  <li><strong>Mold the knob shallower.</strong> Even 4–5mm of epoxy grip holds fine on
+      something that only ever gets gently turned.</li>
+  <li><strong>Then</strong> buy a <strong>6mm rigid shaft coupler</strong> plus a short
+      length of 6mm rod (~$8 on Amazon) — a metal sleeve with set screws that joins the
+      encoder shaft to an extension. This is the only situation where you'd actually buy
+      a rod, and I don't expect you'll need it.</li>
+</ol>
+
+<h3>If it's too <em>long</em></h3>
+<p>Just mold the knob deeper — free. Only cut the shaft as a last resort, and if you do,
+<strong>clamp the shaft itself in a vise, not the encoder body.</strong> Twisting force
+on the can will wreck the sensor inside.</p>
+
+<div class="big">
+<strong>The one measurement to take when the package arrives:</strong> lay a ruler
+alongside the encoder and write down how much shaft sticks out past the threaded collar.
+Every other decision on this page falls out of that one number. Do it before you cut PVC.
+</div>
+
+<div class="hr"></div>
+<p class="cap" style="margin-top:24px">Eight×Two · Memory Box build #1</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "attract": "media/highlights.mp4",
+  "games": [
+    {
+      "title": "vs. Ambridge",
+      "date": "Friday, September 12, 1969",
+      "file": "media/1969-09-12-ambridge.mp4"
+    },
+    {
+      "title": "vs. Charleroi",
+      "date": "Friday, October 3, 1969",
+      "file": "media/1969-10-03-charleroi.mp4"
+    },
+    {
+      "title": "vs. Donora",
+      "date": "Friday, October 17, 1969",
+      "file": "media/1969-10-17-donora.mp4"
+    }
+  ]
+}

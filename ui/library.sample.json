@@ -1,0 +1,41 @@
+{
+  "brand": "YOUR NAME HERE",
+  "collection": "THE COLLECTION",
+  "mark": "01",
+  "theme": "crimson",
+  "attract": "highlights",
+  "rows": [
+    {
+      "title": "Start Here",
+      "items": [
+        {
+          "id": "highlights",
+          "title": "The Highlight Reel",
+          "opponent": "A one-line subtitle",
+          "year": "1969-1972",
+          "runtime": "1:00",
+          "tag": "Reel",
+          "date": "",
+          "blurb": "The hero panel shows this text. Two sentences is about right - say why someone should watch this one first.",
+          "file": "media/highlights.mp4"
+        }
+      ]
+    },
+    {
+      "title": "1972 - Senior Season",
+      "items": [
+        {
+          "id": "1972-example",
+          "title": "vs. Someone",
+          "opponent": "Where it was played",
+          "year": "1972",
+          "runtime": "16:48",
+          "tag": "",
+          "date": "",
+          "blurb": "Leave 'tag' empty and no corner label is drawn. Fill in 'date' (e.g. 'Friday, October 15, 1972') and it replaces the year on the hero line.",
+          "file": "media/example-game.mp4"
+        }
+      ]
+    }
+  ]
+}

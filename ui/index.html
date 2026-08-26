@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Memory Box</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===================== BROWSE ===================== -->
+<div id="browse" class="screen is-active">
+
+  <!-- backdrop: two layers so we can crossfade between them -->
+  <div class="backdrop">
+    <div class="backdrop-bed"></div>
+    <div class="backdrop-layer" id="bdA"></div>
+    <div class="backdrop-layer" id="bdB"></div>
+    <div class="backdrop-scrim"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="mark" id="mark"></div>
+    <div class="brand-copy">
+      <div class="collection" id="collection"></div>
+      <div class="brand" id="brand">EIGHT &times; TWO</div>
+    </div>
+    <div class="counter" id="counter"></div>
+  </header>
+
+  <!-- the tuning band: a hairline under the masthead with a lit marker
+       that slides as the knob turns. Doubles as the rule under the brand. -->
+  <div class="dial" id="dial"><span class="dial-needle"></span></div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-kicker" id="heroKicker"></div>
+      <h1 class="hero-title" id="heroTitle"></h1>
+      <div class="hero-rule"></div>
+      <div class="hero-meta" id="heroMeta"></div>
+      <p class="hero-blurb" id="heroBlurb"></p>
+      <div class="hero-cue">
+        <span class="cue-knob"></span>
+        <span>turn to browse</span>
+        <span class="dot">&bull;</span>
+        <span>press to play</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="shelves">
+    <div class="shelf-track" id="shelfTrack"></div>
+  </section>
+
+</div>
+
+<!-- ===================== PLAYER ===================== -->
+<div id="player" class="screen">
+  <video id="video" playsinline preload="none"></video>
+  <div class="player-card" id="playerCard">
+    <div class="pc-kicker" id="pcKicker"></div>
+    <div class="pc-title" id="pcTitle"></div>
+    <div class="pc-meta" id="pcMeta"></div>
+  </div>
+  <div class="player-bar" id="playerBar">
+    <div class="pb-title" id="pbTitle"></div>
+    <div class="pb-track"><div class="pb-fill" id="pbFill"></div></div>
+    <div class="pb-time" id="pbTime">0:00</div>
+  </div>
+  <div class="paused-badge" id="pausedBadge">PAUSED</div>
+</div>
+
+<!-- ===================== ATTRACT ===================== -->
+<div id="attract" class="screen">
+  <!-- preload=none matters: this must not buffer until attract is actually
+       entered, or the box spends its first seconds loading video it isn't showing -->
+  <video id="attractVideo" muted playsinline loop preload="none"></video>
+  <div class="attract-scrim"></div>
+  <div class="attract-copy">
+    <div class="attract-brand" id="attractBrand"></div>
+    <div class="attract-cue">turn the dial</div>
+  </div>
+</div>
+
+<!-- analog overlays -->
+<div class="grain" id="grain"></div>
+<div class="vignette"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

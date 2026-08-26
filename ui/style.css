@@ -1,0 +1,641 @@
+/* ============================================================
+   Memory Box UI — built to look right on a small 7" panel
+   behind a radio grille, and to scale up on a desktop browser.
+   Everything sizes off viewport height, so it fills whatever
+   screen ends up in the cabinet.
+   ============================================================ */
+
+/* ---- display face --------------------------------------------------
+   Bebas Neue, served from ui/fonts/. NOT from Google's CDN — the box
+   has to boot with the network unplugged, and a webfont that 404s would
+   silently drop every title back to Helvetica.
+
+   It's a condensed all-caps face, which is the reason it's here: at the
+   same cap height it fits roughly 40% more characters per line than
+   Helvetica, so titles can be physically taller on a 7" panel without
+   wrapping. "vs. Elizabeth Forward" is the one that decides this.
+   -------------------------------------------------------------------- */
+@font-face{
+  font-family:'Bebas Neue';
+  src:url('fonts/bebasneue-latin.woff2') format('woff2');
+  font-weight:400; font-style:normal; font-display:block;
+}
+
+/* ---- accent colour -------------------------------------------------
+   The whole UI takes its accent from --amber / --amber-soft (names kept
+   so nothing else has to change). Swap the theme with a URL flag while
+   deciding — ?theme=red — then set the winner as the default here.
+   Themes live at the bottom of this file.
+   -------------------------------------------------------------------- */
+:root{
+  --amber:#ff2d2d;           /* signal red */
+  --amber-soft:#ff8a8a;
+  --ink:#07080a;
+
+  /* Type is warm cream, never pure white. #fff on black reads as a
+     computer display; aged paper reads as an archive, and it sits
+     better next to sepia-ish 8mm scans. */
+  --paper:#efe4d2;
+  --paper-dim:#b9a793;
+
+  --display:'Bebas Neue', 'Haettenschweiler', 'Impact', sans-serif;
+  --tile-w: 21.5vh;          /* sized off screen height, not width */
+  --tile-h: calc(var(--tile-w) * 0.75);   /* 4:3 — every scan in this archive is 4:3 */
+  --ease: cubic-bezier(.22,.9,.28,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{
+  height:100%; width:100%;
+  background:var(--ink);
+  overflow:hidden;
+  color:var(--paper);
+  font-family:"Helvetica Neue",Helvetica,Arial,"DejaVu Sans",sans-serif;
+  font-size: clamp(9px, 1.55vh, 22px);
+  -webkit-font-smoothing:antialiased;
+  cursor:none;                       /* kiosk: no mouse pointer */
+}
+
+.screen{
+  position:fixed; inset:0;
+  opacity:0; pointer-events:none;
+  transition:opacity .5s var(--ease);
+}
+.screen.is-active{ opacity:1; pointer-events:auto; }
+
+/* ---------------------------------------------- backdrop */
+.backdrop{ position:absolute; inset:0; overflow:hidden; }
+/* A wide, very dim wash of the same warm tone as the art, sitting UNDER
+   the panel and spreading well past it.
+   Without this the fade is tonal but not chromatic: the art is warm
+   sepia and the screen is cold near-black, so even a perfect opacity
+   ramp still ends on a temperature change, and the panel reads as a
+   separate object laid on top. Warming the surrounding dark by a few
+   percent gives the picture something of its own colour to dissolve
+   into, so the edge stops being findable. */
+.backdrop-bed{
+  position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(120% 96% at 74% 34%,
+    rgba(126,86,58,.30) 0, rgba(96,64,44,.16) 38%,
+    rgba(48,32,24,.06) 62%, transparent 82%);
+}
+/* The art is already graded, cropped 16:9 and blurred by build-art.sh, so
+   there is no `filter:` here — running one on a full-screen layer that is
+   also being transformed makes the Pi re-render the whole thing every
+   frame of the drift.
+
+   `center center`, not `center 35%`: the source is now a 16:9 band taken
+   out of the middle of the frame, so the interesting part is already
+   centred. Offsetting it just pushed the action off the top. */
+/* The art does NOT fill the screen.
+   It used to, at 78% opacity under two ink gradients — which meant every
+   pixel of it was being dimmed twice, and the result was a screen-sized
+   grey haze you couldn't read as a photograph at all. Better to show a
+   smaller piece of it properly than the whole thing badly.
+
+   So: a panel down the right, where nothing else lives. The title, the
+   metadata and the shelves are all left-aligned, so the right ~62% is the
+   only region that was never contested. Given that, the image no longer
+   has to be knocked back to keep type legible, and it can run at full
+   strength. */
+.backdrop-layer{
+  position:absolute;
+  /* Match the art's 16:9 as closely as the layout allows, and no wider.
+     `cover` fills the panel by scaling until the SHORT axis is covered,
+     so any panel wider than 16:9 gets zoomed and cropped — at 26%/31%
+     this box was about 2.1:1, which meant an ~18% enlargement and a
+     matching loss of detail. Around 1.85:1 the zoom is a few percent.
+
+     This is also why it can't simply be made bigger: past 16:9 you don't
+     get more picture, you get less of it, larger. */
+  top:3.4rem; right:0; bottom:33%; left:37%;
+  background-size:cover; background-position:center center;
+  opacity:0;
+  transform:scale(1.01);
+  transition:opacity 1.1s var(--ease), transform 14s linear;
+  will-change:opacity, transform;
+  /* Feathered rather than cut off square — a hard edge would read as a
+     photo pasted onto a panel. Two gradients INTERSECTED: left diagonal
+     and bottom. Left as separate mask layers they'd union instead, which
+     is the opposite of a feather.
+
+     The stops are an S-curve, not a straight ramp. A linear fade still
+     shows a seam: opacity changes at a constant rate, then stops dead at
+     both ends, and the eye picks up those two slope changes as edges
+     (Mach bands) even though the pixels either side match. Easing in and
+     out — slow, quick through the middle, slow again — leaves nothing
+     for it to catch on. Same distance, no line. */
+  -webkit-mask-image:
+    linear-gradient(104deg,
+      transparent 0, rgba(0,0,0,.04) 10%, rgba(0,0,0,.16) 18%,
+      rgba(0,0,0,.42) 26%, rgba(0,0,0,.72) 34%, rgba(0,0,0,.92) 42%, #000 52%),
+    linear-gradient(to top,
+      transparent 0, rgba(0,0,0,.18) 7%, rgba(0,0,0,.62) 15%, #000 24%,
+      #000 84%, rgba(0,0,0,.55) 93%, transparent 100%);
+          mask-image:
+    linear-gradient(104deg,
+      transparent 0, rgba(0,0,0,.04) 10%, rgba(0,0,0,.16) 18%,
+      rgba(0,0,0,.42) 26%, rgba(0,0,0,.72) 34%, rgba(0,0,0,.92) 42%, #000 52%),
+    linear-gradient(to top,
+      transparent 0, rgba(0,0,0,.18) 7%, rgba(0,0,0,.62) 15%, #000 24%,
+      #000 84%, rgba(0,0,0,.55) 93%, transparent 100%);
+  -webkit-mask-composite:source-in;
+          mask-composite:intersect;
+}
+/* The slow drift is scaled back too — it ends at 1.04, not 1.07. The end
+   of that push was another 7% of enlargement on top of the cover zoom,
+   so the image was at its softest right when it had been on screen
+   longest and you'd had the most time to look at it. */
+.backdrop-layer.on{ opacity:1; transform:scale(1.04); }
+/* What's left of the scrim is only what the layout actually needs: ink at
+   the bottom so the shelf titles have something to sit on, and the warm
+   glow top-right. The old left-to-right ink gradient is gone — the mask
+   above does that job now, and without darkening the picture to do it.
+
+   The warmth is doing real work: the footage is black-and-white and the
+   panel is small, so without it the whole screen reads as an unlit
+   rectangle instead of a lit object sitting in a wooden radio. */
+.backdrop-scrim{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(90vh 55vh at 80% 12%, rgba(150,58,38,.26), transparent 60%),
+    linear-gradient(to top, var(--ink) 12%, rgba(7,8,10,.30) 42%, rgba(7,8,10,0) 72%);
+}
+/* faint horizontal scanlines over everything — a CRT/projector tell that
+   costs nothing and hides the panel's own pixel grid a little */
+.backdrop::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(to bottom,
+    rgba(255,255,255,.016) 0 1px, transparent 1px 3px);
+  mix-blend-mode:screen;
+}
+
+/* ---------------------------------------------- top bar */
+.topbar{
+  position:absolute; top:0; left:0; right:0;
+  display:flex; align-items:flex-start; gap:1.1rem;
+  padding:1.5rem 2.4rem 0;
+  z-index:5;
+}
+/* the collection's initial in a box — a maker's mark stamped on the case */
+.mark{
+  flex:0 0 auto;
+  width:2.5rem; height:2.5rem;
+  display:grid; place-items:center;
+  font-family:var(--display);
+  font-size:2rem; line-height:1;
+  color:var(--amber);
+  border:1px solid var(--amber);
+  box-shadow:inset 0 0 1.2rem rgba(255,255,255,.06);
+  padding-top:.15rem;                /* Bebas sits high in its box */
+}
+/* Two characters — a jersey number rather than an initial. Slightly wider
+   and a size down so the digits aren't jammed against the border, but the
+   box stays the same height as the single-letter version so the masthead
+   doesn't shift. */
+.mark.mark-wide{ width:3.1rem; font-size:1.75rem; letter-spacing:.02em; }
+.brand-copy{ display:grid; gap:.35rem; padding-top:.25rem; }
+.collection{
+  font-size:.9rem; letter-spacing:.26em; font-weight:600;
+  color:var(--paper-dim); text-transform:uppercase;
+}
+.brand{
+  font-size:.8rem; font-weight:700; letter-spacing:.32em;
+  color:var(--amber); text-transform:uppercase;
+}
+/* position in the archive — "04 / 12". Tells you how much is left to turn. */
+.counter{
+  margin-left:auto; padding-top:.5rem;
+  font-size:.85rem; letter-spacing:.3em; font-weight:700;
+  color:var(--paper-dim); font-variant-numeric:tabular-nums;
+}
+.counter b{ color:var(--amber); font-weight:700; }
+
+/* The tuner: one hairline across the whole head of the screen with a
+   lit spot that slides as you turn. This is both the rule under the
+   masthead and the dial readout — a radio has one glowing marker
+   travelling a band, not a progress bar. */
+.dial{
+  position:absolute; top:5.4rem; left:2.4rem; right:2.4rem; height:1px;
+  z-index:5;
+  background:linear-gradient(to right,
+    rgba(255,255,255,.06), rgba(255,255,255,.22) 50%, rgba(255,255,255,.06));
+}
+.dial::before{                        /* faint band ticks */
+  content:""; position:absolute; inset:-.35rem 0 auto 0; height:.35rem;
+  background:repeating-linear-gradient(to right,
+    rgba(255,255,255,.18) 0 1px, transparent 1px 4%);
+  opacity:.5;
+}
+/* --p is a 0..1 position set by app.js. The travel is inset by half the
+   glow's width at each end so the smear never hangs off the band and
+   bleeds onto the masthead — it always reads as a marker on a scale. */
+.dial-needle{
+  --p:0;
+  position:absolute; top:50%;
+  left:calc(3.5rem + (100% - 7rem) * var(--p));
+  width:7rem; height:1.1rem; margin:-.55rem 0 0 -3.5rem;
+  background:radial-gradient(closest-side,
+    var(--amber) 0, rgba(255,255,255,0) 78%);
+  filter:blur(3px); opacity:.85;
+  transition:left .45s var(--ease);
+}
+.dial-needle::after{                  /* the marker itself, inside the glow */
+  content:""; position:absolute; left:50%; top:50%;
+  width:2px; height:.85rem; margin:-.42rem 0 0 -1px;
+  background:var(--amber);
+  filter:blur(.4px);
+}
+
+/* ---------------------------------------------- hero */
+.hero{
+  position:absolute; left:0; right:0;
+  top:22%;
+  padding:0 2.4rem;
+  z-index:4;
+  pointer-events:none;
+}
+.hero-inner{ max-width:46%; }
+.hero-kicker{
+  font-size:.9rem; letter-spacing:.34em; font-weight:700;
+  color:var(--amber); margin-bottom:.7rem; text-transform:uppercase;
+}
+.hero-title{
+  font-family:var(--display);
+  font-size:6rem; line-height:.86; font-weight:400;
+  letter-spacing:.012em;                 /* condensed caps need air, not tightening */
+  color:var(--paper);
+  text-shadow:0 .3rem 2.2rem rgba(0,0,0,.85);
+}
+/* short accent rule that fades out — an underline on a title card,
+   and it gives the eye a place to stop before the metadata */
+.hero-rule{
+  width:9rem; height:2px; margin:.7rem 0 .9rem;
+  background:linear-gradient(to right, var(--amber), rgba(255,255,255,0));
+}
+.hero-meta{
+  font-size:1rem; font-weight:600;
+  letter-spacing:.14em; color:var(--paper-dim);
+  display:flex; gap:.85rem; align-items:center; flex-wrap:wrap;
+}
+.hero-meta .bit{ display:inline-flex; align-items:center; gap:.45rem; }
+.hero-meta .ico{
+  width:1.05rem; height:1.05rem; flex:0 0 auto;
+  stroke:var(--amber); fill:none; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.hero-meta .sep{                        /* upright rule, not a slash */
+  width:1px; height:1.15rem;
+  background:rgba(255,255,255,.2);
+}
+.hero-meta .badge{
+  border:1px solid var(--amber); color:var(--amber);
+  padding:.15rem .6rem; letter-spacing:.2em; font-size:.85rem;
+}
+.hero-blurb{
+  margin-top:1rem; font-size:1.1rem; line-height:1.5;
+  color:rgba(239,228,210,.62); max-width:34rem;
+}
+.hero-cue{
+  margin-top:1.4rem; font-size:.82rem; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--amber);
+  font-weight:700;
+  display:flex; align-items:center; gap:.75rem;
+}
+.hero-cue .dot{ color:rgba(255,255,255,.3); letter-spacing:normal; }
+/* a little drawn knob, so the instruction points at the physical thing */
+.cue-knob{
+  position:relative; flex:0 0 auto;
+  width:1.5rem; height:1.5rem; border-radius:50%;
+  border:2px solid var(--amber);
+  box-shadow:0 0 .9rem rgba(255,255,255,.06), inset 0 0 .6rem rgba(255,255,255,.06);
+}
+.cue-knob::before{
+  content:""; position:absolute; inset:.28rem;
+  border:1px solid var(--amber); border-radius:50%; opacity:.5;
+}
+.cue-knob::after{                       /* the pointer bead, pulsing */
+  content:""; position:absolute; top:.1rem; left:50%;
+  width:.22rem; height:.22rem; margin-left:-.11rem;
+  border-radius:50%; background:var(--amber);
+  box-shadow:0 0 .5rem var(--amber);
+  animation:pulse 2.4s infinite ease-in-out;
+}
+@keyframes pulse{ 0%,100%{opacity:.25} 50%{opacity:1} }
+
+/* hero text swaps out and back in when you tune */
+.hero-inner.swap{ animation:swap .42s var(--ease); }
+@keyframes swap{
+  0%{ opacity:0; transform:translateY(1.1rem) }
+  100%{ opacity:1; transform:none }
+}
+
+/* ---------------------------------------------- shelves */
+.shelves{
+  position:absolute; left:0; right:0; bottom:0;
+  height:46%;
+  z-index:4;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 4%, #000 100%);
+          mask-image:linear-gradient(to bottom, transparent 0, #000 4%, #000 100%);
+}
+.shelf-track{
+  position:absolute; left:0; right:0; top:0;
+  padding-top:2.6rem;
+  transition:transform .5s var(--ease);
+}
+.shelf{
+  padding:0 0 1.7rem 0;
+  opacity:.32;
+  transition:opacity .45s var(--ease);
+}
+.shelf.active{ opacity:1; }
+.shelf-title{
+  font-size:.92rem; font-weight:700; letter-spacing:.28em;
+  text-transform:uppercase; color:rgba(239,228,210,.55);
+  padding-left:2.4rem; margin-bottom:2.5rem;   /* room for the selected tile to grow up into */
+}
+.shelf.active .shelf-title{ color:var(--amber-soft); }
+.shelf-row{
+  display:flex; gap:1.1rem;
+  padding-left:2.4rem;
+  transition:transform .5s var(--ease);
+  will-change:transform;
+}
+
+/* ---------------------------------------------- tiles */
+.tile{
+  position:relative; flex:0 0 auto;
+  width:var(--tile-w); height:var(--tile-h);
+  border-radius:.35rem;
+  overflow:hidden;
+  background:#111 center/cover no-repeat;
+  transform-origin:center bottom;
+  transition:transform .38s var(--ease), box-shadow .38s var(--ease);
+  box-shadow:0 .6rem 1.6rem rgba(0,0,0,.6);
+  outline:1px solid rgba(255,255,255,.07);
+  outline-offset:-1px;
+}
+.tile::after{                        /* keeps thumbnails readable */
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.85) 0, rgba(0,0,0,.1) 55%);
+}
+.tile-label{
+  position:absolute; left:.7rem; right:.7rem; bottom:.45rem; z-index:2;
+  font-family:var(--display); font-weight:400;
+  font-size:1.25rem; line-height:1.05; letter-spacing:.02em;
+  color:var(--paper);
+  text-shadow:0 1px 6px #000;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.tile-year{
+  position:absolute; left:.7rem; top:.55rem; z-index:2;
+  font-size:.72rem; font-weight:700; letter-spacing:.22em;
+  color:rgba(239,228,210,.62); text-shadow:0 1px 6px #000;
+}
+.tile-tag{
+  position:absolute; right:.55rem; top:.5rem; z-index:2;
+  font-size:.66rem; font-weight:800; letter-spacing:.16em;
+  text-transform:uppercase;
+  background:var(--amber); color:#0a0507;   /* near-black reads on any accent */
+  padding:.12rem .45rem; border-radius:.15rem;
+}
+.tile-prev{                          /* the muted hover preview */
+  position:absolute; inset:0; z-index:1;
+  width:100%; height:100%; object-fit:cover;
+  opacity:0; transition:opacity .55s var(--ease);
+}
+.tile-prev.on{ opacity:1; }
+
+.tile.selected{
+  transform:scale(1.22) translateY(-.45rem);
+  box-shadow:
+    0 1.1rem 2.6rem rgba(0,0,0,.8),
+    0 0 0 2px var(--amber),
+    0 0 2.2rem rgba(255,176,74,.45);
+  z-index:3;
+}
+.tile.selected .tile-label{ font-size:1.1rem; }
+
+/* the whole rig gives a tiny kick on each detent */
+.shelves.tick .tile.selected{ animation:kick .18s var(--ease); }
+@keyframes kick{ 50%{ transform:scale(1.27) translateY(-.6rem) } }
+
+/* ---------------------------------------------- player */
+#player{ background:#000; }
+#video{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:contain;
+  background:#000;
+}
+.player-card{
+  position:absolute; left:3rem; bottom:4.5rem; z-index:3;
+  opacity:0; transform:translateY(1rem);
+  transition:opacity .6s var(--ease), transform .6s var(--ease);
+  text-shadow:0 .2rem 1.4rem rgba(0,0,0,.9);
+}
+.player-card.on{ opacity:1; transform:none; }
+.pc-kicker{ font-size:.9rem; letter-spacing:.34em; color:var(--amber); font-weight:700; }
+.pc-title{
+  font-family:var(--display); font-size:4.2rem; font-weight:400;
+  letter-spacing:.012em; line-height:.9; margin-top:.35rem;
+}
+.pc-meta{ font-size:1rem; letter-spacing:.16em; color:var(--paper-dim); margin-top:.5rem; }
+
+.player-bar{
+  position:absolute; left:0; right:0; bottom:0; z-index:4;
+  display:flex; align-items:center; gap:1.2rem;
+  padding:2.4rem 2.6rem 1.4rem;
+  background:linear-gradient(to top, rgba(0,0,0,.85), transparent);
+  opacity:0; transition:opacity .5s var(--ease);
+}
+.player-bar.on{ opacity:1; }
+.pb-title{ font-size:.95rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; }
+.pb-track{ flex:1; height:2px; background:rgba(255,255,255,.22); }
+.pb-fill{ height:100%; width:0; background:var(--amber); box-shadow:0 0 8px var(--amber); }
+.pb-time{ font-size:.9rem; letter-spacing:.14em; color:var(--paper-dim); font-variant-numeric:tabular-nums; }
+
+.paused-badge{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  z-index:5; font-family:var(--display); font-size:2.6rem;
+  font-weight:400; letter-spacing:.5em;
+  color:var(--amber); text-shadow:0 0 2rem rgba(0,0,0,.9);
+  opacity:0; transition:opacity .3s var(--ease);
+}
+.paused-badge.on{ opacity:1; }
+
+/* ---------------------------------------------- attract */
+#attract{ background:#000; }
+#attractVideo{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; filter:saturate(.4) contrast(1.05) brightness(.7);
+}
+.attract-scrim{
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at center, rgba(7,8,10,.15) 0, rgba(7,8,10,.92) 78%);
+}
+.attract-copy{
+  position:absolute; inset:0; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:1.6rem; text-align:center;
+}
+.attract-brand{
+  font-family:var(--display); font-size:4.4rem;
+  font-weight:400; letter-spacing:.22em; line-height:.9;
+  text-shadow:0 .3rem 2rem rgba(0,0,0,.9);
+}
+.attract-cue{
+  font-size:1rem; letter-spacing:.5em; text-transform:uppercase;
+  color:var(--amber); animation:pulse 3s infinite ease-in-out;
+}
+
+/* ---------------------------------------------- analog overlays */
+.grain{
+  position:fixed; inset:-50%;
+  z-index:50; pointer-events:none;
+  opacity:.16;
+  background-image:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter>\
+<rect width='140' height='140' filter='url(%23n)' opacity='.5'/></svg>");
+  animation:grain 1.1s steps(6) infinite;
+}
+@keyframes grain{
+  0%{transform:translate(0,0)}      20%{transform:translate(-3%,2%)}
+  40%{transform:translate(2%,-3%)}  60%{transform:translate(-2%,-2%)}
+  80%{transform:translate(3%,1%)}   100%{transform:translate(0,0)}
+}
+body.lite .grain{ display:none; }     /* ?lite=1 if the Pi struggles */
+
+.vignette{
+  position:fixed; inset:0; z-index:49; pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,.6) 100%);
+}
+
+/* A narrow/tall viewport — a 4:3-ish panel behind a grille, or just a
+   tall dev window. The hero gets a wider column, but it also has to be
+   kept short: the hero and the shelves are both absolutely positioned,
+   so a title that wraps to three lines will run straight down into the
+   shelf. Hence the clamps rather than only a width change. */
+@media (max-aspect-ratio: 5/4){
+  :root{ --tile-w: 26vh; }
+  .hero-inner{ max-width:86%; }
+  .hero{ top:14%; }
+  .hero-title{ font-size:4.6rem; }
+  .hero-meta{ font-size:.95rem; }
+  .hero-blurb{
+    font-size:1rem; margin-top:.7rem;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .hero-cue{ margin-top:.9rem; }
+  .shelves{ height:52%; }
+}
+
+/* ------------------------------------------------------------------
+   THE 7" PANEL. This is the one that matters.
+
+   On a 1024x600 7" screen one CSS pixel is 0.15 mm, so the desktop
+   type scale lands at 1.2-1.6 mm tall — about 4pt, illegible past
+   arm's length. A radio on a shelf gets read from 2-5 feet, which
+   needs 3 mm minimum. So short screens get a bigger floor on the root
+   size, fewer and larger tiles, and the blurb capped to two lines
+   instead of being allowed to eat the screen.
+   ------------------------------------------------------------------ */
+@media (max-height: 700px){
+  :root{ --tile-w: 25vh; }
+  html{ font-size: clamp(13px, 2.5vh, 18px); }   /* ~15px => 2.3 mm base */
+
+  .topbar{ padding:1.1rem 1.8rem 0; }
+  .mark{ width:2.2rem; height:2.2rem; font-size:1.75rem; }
+  .brand{ font-size:.78rem; letter-spacing:.28em; }
+  .collection{ font-size:.85rem; }
+  .dial{ top:4.4rem; left:1.8rem; right:1.8rem; }
+
+  .hero{ top:15%; padding:0 1.8rem; }
+  .hero-inner{ max-width:58%; }
+  .hero-title{ font-size:5.4rem; }                /* Bebas: ~9 mm cap height */
+  .hero-rule{ width:7rem; margin:.5rem 0 .7rem; }
+  .hero-meta{ font-size:.98rem; }
+  .hero-blurb{
+    font-size:1.05rem; line-height:1.45; margin-top:.7rem;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .hero-cue{ margin-top:.9rem; }
+
+  .shelves{ height:45%; }
+  .shelf-title{ font-size:1rem; padding-left:1.8rem; margin-bottom:3.2rem; }
+  .shelf-row{ padding-left:1.8rem; gap:.9rem; }
+  .tile-label{ font-size:1.45rem; }
+  .tile.selected .tile-label{ font-size:1.3rem; }
+  .tile-year{ font-size:.8rem; }
+  .tile-tag{ font-size:.75rem; }
+
+  .pc-title{ font-size:3.6rem; }
+  .attract-brand{ font-size:3.6rem; }
+}
+
+/* ------------------------------------------------------------------
+   THE 800x480 DSI PANEL (the official Pi 7").
+
+   Same diagonal as the 1024x600, but 120 fewer rows — and vertical
+   space is what this layout spends. At the 600px settings the hero
+   title wraps to two lines, which pushes the metadata into a second
+   row and drops the blurb on top of the shelf.
+
+   So: a smaller title that still clears 6 mm, one line of blurb
+   instead of two, and a wider text column so "The Highlight Reel"
+   and "vs. Elizabeth Forward" stay on one line.
+   ------------------------------------------------------------------ */
+@media (max-height: 520px){
+  :root{ --tile-w: 27vh; }
+
+  .topbar{ padding:.9rem 1.5rem 0; }
+  .mark{ width:2rem; height:2rem; font-size:1.55rem; }
+  .dial{ top:3.9rem; left:1.5rem; right:1.5rem; }
+
+  .hero{ top:14%; padding:0 1.5rem; }
+  .hero-inner{ max-width:68%; }
+  .hero-kicker{ margin-bottom:.45rem; }
+  .hero-title{ font-size:4.4rem; }
+  .hero-rule{ margin:.4rem 0 .55rem; }
+  .hero-meta{ font-size:.92rem; gap:.6rem; flex-wrap:nowrap; }
+  .hero-blurb{ -webkit-line-clamp:1; margin-top:.5rem; font-size:1rem; }
+  .hero-cue{ margin-top:.6rem; font-size:.76rem; }
+  .cue-knob{ width:1.25rem; height:1.25rem; }
+
+  .shelves{ height:42%; }
+  .shelf-title{ margin-bottom:2.6rem; }
+}
+
+/* ============================================================
+   THEMES
+   Set on <html> by app.js from ?theme=... (or the "theme" key in
+   library.json). Each is just two values: the accent and a lighter
+   tint used for the active shelf title.
+
+   All of these are picked to sit on near-black and read against
+   black-and-white footage, which has no colour to compete with —
+   so saturation is what does the work, not brightness.
+   ============================================================ */
+
+/* signal red — strongest pop; reads as "recording", scoreboard, Kodak */
+html[data-theme="red"]{ --amber:#ff2d2d; --amber-soft:#ff8a8a; }
+
+/* deeper varsity/blood red — more period-correct, less alarm-clock */
+html[data-theme="crimson"]{ --amber:#e01b24; --amber-soft:#ff7a80; }
+
+/* the original: warm dial amber, matches a radio's tuning bulb */
+html[data-theme="amber"]{ --amber:#ffb04a; --amber-soft:#ffd9a0; }
+
+/* CRT / oscilloscope green — very "old machine", high pop */
+html[data-theme="green"]{ --amber:#3dff88; --amber-soft:#a8ffca; }
+
+/* electric cyan — coldest, most modern, strong against sepia stills */
+html[data-theme="cyan"]{ --amber:#22e0ff; --amber-soft:#9df1ff; }
+
+/* hot magenta — the loudest option; pairs with the funky-radio art */
+html[data-theme="magenta"]{ --amber:#ff2fb0; --amber-soft:#ff9ad8; }
