@@ -1,3 +1,5 @@
+<img src="logo.png" alt="Eight × Two Films" width="96" align="right">
+
 # Memory Box
 
 A Raspberry Pi inside a gutted 1960s radio that plays your family's films, browsed
